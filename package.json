@@ -1,0 +1,30 @@
+{
+  "name": "proxy",
+  "version": "1.0.0",
+  "description": "A home assignment made just for you: Following up on our discussion, I'd like you to write a simple API gateway server. The purpose of this server is to be a proxy for all API requests and limit the rate of requests coming from a single user.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hihipriz/proxy.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hihipriz/proxy/issues"
+  },
+  "homepage": "https://github.com/hihipriz/proxy#readme",
+  "devDependencies": {
+    "eslint": "^6.4.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.18.2"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "node-fetch": "^2.6.0",
+    "request": "^2.88.0"
+  }
+}
