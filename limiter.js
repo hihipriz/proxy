@@ -1,9 +1,38 @@
+// Data model:
+
+// [
+// 10.9.0.1: [{
+//     provider: 'ipGeo',
+//     times: [10:01, 11:02]
+// },
+// {
+//     provider: 'ip',
+//     times: [10:01, 11:02]
+// },
+// ],
+
+// 10.9.0.2: [{
+//     provider: 'ipGeo',
+//     times: [10:01, 11:02]
+// }]
+
+const config = require('config');
+
+const limit = config.get('requestLimit');
+
+// maybe use two separate caches to make it simpler at this point
 const cache = new Map();
-const check = (ip) => {
-    if (!cache.get(ip)) {
-        cache.set(ip, [Date.now()]);
+const allowed = (ip, provider) => {
+    const providers = cache.get(ip);
+    if (!providers || (providers && !providers[provider])) {
+        cache.set(ip, [
+            {
+                provider,
+                times: [Date.now()],
+            },
+        ]);
     } else {
-        const times = cache.get(ip);
+        const { times } = providers.filter((p) => p.provider === provider);
 
         // remove passed times. (can be made more efficient since it's a sorted list)
         times.filter((time) => {
@@ -13,8 +42,7 @@ const check = (ip) => {
         });
         cache.set(ip, times);
 
-        // todo: make this configurable
-        if (times.length >= 10) {
+        if (times.length >= limit) {
             return false;
         }
 
@@ -26,5 +54,5 @@ const check = (ip) => {
 };
 
 module.exports = {
-    check,
+    allowed,
 };
