@@ -1,31 +1,36 @@
 {
-  "name": "proxy",
-  "version": "1.0.0",
-  "description": "A home assignment made just for you: Following up on our discussion, I'd like you to write a simple API gateway server. The purpose of this server is to be a proxy for all API requests and limit the rate of requests coming from a single user.",
-  "main": "app.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/hihipriz/proxy.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/hihipriz/proxy/issues"
-  },
-  "homepage": "https://github.com/hihipriz/proxy#readme",
-  "devDependencies": {
-    "eslint": "^6.4.0",
-    "eslint-config-airbnb-base": "^14.0.0",
-    "eslint-plugin-import": "^2.18.2"
-  },
-  "dependencies": {
-    "config": "^3.2.2",
-    "express": "^4.17.1",
-    "node-fetch": "^2.6.0",
-    "request": "^2.88.0"
-  }
+    "name": "proxy",
+    "version": "1.0.0",
+    "description": "A home assignment made just for you: Following up on our discussion, I'd like you to write a simple API gateway server. The purpose of this server is to be a proxy for all API requests and limit the rate of requests coming from a single user.",
+    "main": "app.js",
+    "scripts": {
+        "start": "node app.js",
+        "test": "./node_modules/mocha/bin/mocha test/**/*.js --reporter spec"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/hihipriz/proxy.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/hihipriz/proxy/issues"
+    },
+    "homepage": "https://github.com/hihipriz/proxy#readme",
+    "devDependencies": {
+        "chai": "^4.2.0",
+        "chai-shallow-deep-equal": "^1.4.6",
+        "eslint": "^6.4.0",
+        "eslint-config-airbnb-base": "^14.0.0",
+        "eslint-plugin-import": "^2.18.2",
+        "mocha": "^6.2.0",
+        "supertest": "^4.0.2"
+    },
+    "dependencies": {
+        "config": "^3.2.2",
+        "express": "^4.17.1",
+        "node-fetch": "^2.6.0",
+        "request": "^2.88.0"
+    }
 }

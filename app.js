@@ -10,4 +10,9 @@ app.get('/getIPCountry', (req, res) => {
     handle(ip, res);
 });
 
-app.listen(port, () => console.log(`Proxy listening on port ${port}!`));
+// make sure supertest and app aren't both listening when running test
+if (!module.parent) {
+    app.listen(port, () => console.log(`Proxy listening on port ${port}!`));
+}
+
+module.exports = app;
