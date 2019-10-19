@@ -1,5 +1,5 @@
 const express = require('express');
-const { handle } = require('./handler');
+const { handle, getMetrics } = require('./handler');
 
 const app = express();
 const port = 3000;
@@ -9,6 +9,14 @@ app.get('/getIPCountry', (req, res) => {
         const ip = req.headers['x-forwarded-for'];
 
         handle(ip, res);
+    } catch (error) {
+        console.log(error);
+    }
+});
+
+app.get('/metrics', (req, res) => {
+    try {
+        res.send(getMetrics());
     } catch (error) {
         console.log(error);
     }

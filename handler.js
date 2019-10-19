@@ -1,9 +1,12 @@
 const fetch = require('node-fetch');
+const percentile = require('percentile');
 const limiter = require('./limiter');
+
+const ipGeoTimes = [];
+const ipstackTimes = [];
 
 const handle = (ip, res) => {
     let countryName = '';
-    const start = new Date();
     let end;
 
     const ipstackUrl = `http://api.ipstack.com/${ip}?access_key=07291042e1800c8d51696b22c85ca849`;
@@ -25,21 +28,44 @@ const handle = (ip, res) => {
         return;
     }
 
+    const start = new Date();
     fetch(url)
-        .then((resp) => resp.json())
-        .then((json) => {
+        .then(resp => resp.json())
+        .then(json => {
             end = new Date() - start;
+
+            if (vendor === 'ipstack') {
+                ipstackTimes.push(end);
+            } else if (vendor === 'ipGeo') {
+                ipGeoTimes.push(end);
+            }
             countryName = json.country_name;
 
             res.send({
                 ip,
                 countryName,
                 apiLatency: end,
-                vendor,
+                vendor
             });
         });
 };
 
+const getMetrics = () => ({
+    ipstack: {
+        percentile50: percentile(50, ipstackTimes),
+        percentile75: percentile(75, ipstackTimes),
+        percentile95: percentile(95, ipstackTimes),
+        percentile99: percentile(99, ipstackTimes)
+    },
+    ipGeo: {
+        percentile50: percentile(50, ipGeoTimes),
+        percentile75: percentile(75, ipGeoTimes),
+        percentile95: percentile(95, ipGeoTimes),
+        percentile99: percentile(99, ipGeoTimes)
+    }
+});
+
 module.exports = {
     handle,
+    getMetrics
 };
