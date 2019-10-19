@@ -2,8 +2,8 @@
 
 commands:
 
-npm start - start the server
-npm test - run the e2e test
+-   npm start - start the server
+-   npm test - run the e2e test
 
 A home assignment made just for you:
 Following up on our discussion, I'd like you to write a simple API gateway server.
