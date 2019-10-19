@@ -1,5 +1,0 @@
-{
-    "prettier.tabWidth": 4,
-    "eslint.autoFixOnSave": true,
-    "editor.wordWrap": "on"
-}
