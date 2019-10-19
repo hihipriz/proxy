@@ -5,9 +5,13 @@ const app = express();
 const port = 3000;
 
 app.get('/getIPCountry', (req, res) => {
-    const ip = req.headers['x-forwarded-for'];
+    try {
+        const ip = req.headers['x-forwarded-for'];
 
-    handle(ip, res);
+        handle(ip, res);
+    } catch (error) {
+        console.log(error);
+    }
 });
 
 // make sure supertest and app aren't both listening when running test
