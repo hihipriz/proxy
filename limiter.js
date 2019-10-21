@@ -25,20 +25,19 @@ const handleMissingProvider = (cache, provider, ip, providers) => {
         cache.set(ip, [
             {
                 provider,
-                times: [Date.now()]
-            }
+                times: [Date.now()],
+            },
         ]);
 
         return true;
     }
 
-    const providerDoesntExist =
-        providers.find(p => p.provider === provider) === undefined;
+    const providerDoesntExist =    providers.find((p) => p.provider === provider) === undefined;
 
     if (providerDoesntExist) {
         providers.push({
             provider,
-            times: [Date.now()]
+            times: [Date.now()],
         });
 
         cache.set(ip, providers);
@@ -55,19 +54,20 @@ const allowed = (ip, provider) => {
     const missing = handleMissingProvider(cache, provider, ip, providers);
     if (missing) return true;
 
-    const filtered = providers.find(p => p.provider === provider);
+    const filtered = providers.find((p) => p.provider === provider);
     const times = (filtered && filtered.times) || [];
 
     // remove passed times. (can be made more efficient since it's a sorted list)
-    times.filter(time => {
+    const filteredTimes = times.filter((time) => {
         const hour = 60 * 60000;
         const passed = Date.now() - time >= hour;
+
         return !passed;
     });
 
     // update map times
-    filtered.times = times;
-    const otherProviders = providers.find(p => p.provider !== provider);
+    filtered.times = filteredTimes;
+    const otherProviders = providers.find((p) => p.provider !== provider);
     const newProviders = [];
     if (otherProviders) {
         newProviders.push(otherProviders);
@@ -75,17 +75,20 @@ const allowed = (ip, provider) => {
     newProviders.push(filtered);
     cache.set(ip, newProviders);
 
-    if (times.length >= limit) {
+    if (filtered.times.length >= limit) {
+        console.log(
+            `${times.length} requests to ${provider} in under an hour. limit is ${limit}, switching vendor`,
+        );
         return false;
     }
 
-    // request is allowed to we add current time
-    times.push(Date.now());
+    // request is allowed so we add current time
+    filtered.times.push(Date.now());
     cache.set(ip, newProviders);
 
     return true;
 };
 
 module.exports = {
-    allowed
+    allowed,
 };

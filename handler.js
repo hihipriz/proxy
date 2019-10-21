@@ -30,8 +30,8 @@ const handle = (ip, res) => {
 
     const start = new Date();
     fetch(url)
-        .then(resp => resp.json())
-        .then(json => {
+        .then((resp) => resp.json())
+        .then((json) => {
             end = new Date() - start;
 
             if (vendor === 'ipstack') {
@@ -41,12 +41,15 @@ const handle = (ip, res) => {
             }
             countryName = json.country_name;
 
-            res.send({
+            const response = {
                 ip,
                 countryName,
                 apiLatency: end,
-                vendor
-            });
+                vendor,
+            };
+            console.log(`response: ${JSON.stringify(response, undefined, 4)}`);
+
+            res.send(response);
         });
 };
 
@@ -55,17 +58,17 @@ const getMetrics = () => ({
         percentile50: percentile(50, ipstackTimes),
         percentile75: percentile(75, ipstackTimes),
         percentile95: percentile(95, ipstackTimes),
-        percentile99: percentile(99, ipstackTimes)
+        percentile99: percentile(99, ipstackTimes),
     },
     ipGeo: {
         percentile50: percentile(50, ipGeoTimes),
         percentile75: percentile(75, ipGeoTimes),
         percentile95: percentile(95, ipGeoTimes),
-        percentile99: percentile(99, ipGeoTimes)
-    }
+        percentile99: percentile(99, ipGeoTimes),
+    },
 });
 
 module.exports = {
     handle,
-    getMetrics
+    getMetrics,
 };

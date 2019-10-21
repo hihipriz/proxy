@@ -10,14 +10,19 @@ const app = require('../app');
 
 const limit = config.get('requestLimit');
 
-const checkMetrics = () => {
+const checkMetrics = (done) => {
     request(app)
         .get('/metrics')
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
-        // eslint-disable-next-line no-loop-func
+    // eslint-disable-next-line no-loop-func
         .then((response) => {
+            console.log(
+                `metrics body: ${JSON.stringify(response.body, undefined, 4)}`,
+            );
             expect(response.body).to.have.all.keys('ipstack', 'ipGeo');
+
+            done();
         });
 };
 describe('GET /getIPCountry', function () {
@@ -30,7 +35,7 @@ describe('GET /getIPCountry', function () {
                 .set('Accept', 'application/json')
                 .set('x-forwarded-for', ip)
                 .expect('Content-Type', /json/)
-                // eslint-disable-next-line no-loop-func
+            // eslint-disable-next-line no-loop-func
                 .then((response) => {
                     let vendor;
 
@@ -40,10 +45,8 @@ describe('GET /getIPCountry', function () {
                         vendor = 'ipstack';
                     }
 
-                    expect(
-                        response.body,
-                        `request number: ${i}`,
-                    ).to.shallowDeepEqual({
+                    console.log(`request number: ${i + 1} sent to ${vendor}`);
+                    expect(response.body, `request number: ${i}`).to.shallowDeepEqual({
                         ip,
                         countryName: 'Israel',
                         vendor,
@@ -52,8 +55,7 @@ describe('GET /getIPCountry', function () {
                     count++;
 
                     if (count === 19) {
-                        checkMetrics();
-                        done();
+                        checkMetrics(done);
                     }
                 });
         }
