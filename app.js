@@ -6,7 +6,15 @@ const port = 3000;
 
 app.get('/getIPCountry', (req, res) => {
     try {
-        const ip = req.headers['x-forwarded-for'];
+    // since xff may provide a number of ips,
+    // we'd like to take the first element in order to get the original ip.
+    // in case of no xff, we get the remoteAddr property. with the original code,
+    // we could end up with the wrong ip, or no ip if there's no xff header
+        let ip =      (req.headers['x-forwarded-for'] || '').split(',')[0]
+      || req.connection.remoteAddress;
+
+        // in case of IPv4-mapped IPv6 address format
+        ip = ip.replace(/^.*:/, '');
 
         handle(ip, res);
     } catch (error) {
